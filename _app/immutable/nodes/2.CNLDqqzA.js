@@ -1,0 +1,1 @@
+import{t,a as r}from"../chunks/C-p85btt.js";import"../chunks/CwWOmaNG.js";const p=!0,s=Object.freeze(Object.defineProperty({__proto__:null,prerender:p},Symbol.toStringTag,{value:"Module"}));var a=t("<p>Cool Test</p>");function c(e){var o=a();r(e,o)}export{c as component,s as universal};
