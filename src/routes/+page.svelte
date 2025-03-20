@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { Button } from "svelte-elegant";
   
 	let shSqnc = "hidden";
@@ -8,25 +8,36 @@
 	let sqnc = "";
 	let inputStr = "";
 	let isError = 0;
+	let record = 0;
   
-	function toGenerate() {
+	function genNumb() {
 	  sqnc = "";
   
 	  for (let i = 0; i < cntChr; i++) {
 		let rnd = Math.floor(Math.random() * 9) + 1;
-		//sqnc += rnd + " ";
 		sqnc += rnd;
 	  }
-  
-	  //sqnc = sqnc.slice(0, -1);
 	}
   
 	function toVsbl() {
-	  toGenerate();
+	  genNumb();
 	  shSqnc = "visible";
 	  setTimeout(() => {
 		shSqnc = "hidden";
 	  }, 1750);
+	}
+
+	function checkResult() {
+		if (inputStr === sqnc) {
+			if (cntChr > record) record = cntChr;
+			cntChr++;
+			isError = 0;
+		  } else {
+			cntChr--;
+			isError = 1;
+		  }
+		  toVsbl();
+		  inputStr = "";
 	}
   </script>
   
@@ -42,8 +53,12 @@
 		}}>Ready to Go!</Button
 	  >
 	</div>
+	<div class="mgn-top">
+		<span style:visibility={shTxtAr}>Numb Count: {cntChr}</span> 
+		<span style:visibility={shTxtAr} style:margin-left = 1.5rem>Your Record: <span style:color = 'green'>{record}</span></span>
+	</div>
 	<div class="mgn-top" id="sqnc">
-	  <p style:visibility={shSqnc}>Remember the sequence of numbers:</p>
+	  <p style:visibility={shTxtAr}>{shSqnc === 'visible' ? 'Remember the number:' : 'Enter the number'}</p>
 	  <p
 		style:visibility={shSqnc}
 		style:color={isError ? "red" : "green"}
@@ -55,12 +70,18 @@
 	<div class="mgn-top">
 	  <textarea
 		bind:value={inputStr}
+		on:keydown={(event) => {
+			if (event.key === 'Enter') {
+				event.preventDefault();
+				checkResult();
+			}
+		}}
 		style:visibility={shTxtAr}
 		style:border="1px solid #d7d7d7"
 		style:outline="none"
 		style:border-radius="0.25rem"
-		style:width="20rem"
-		style:height="20rem"
+		style:width="15rem"
+		style:height="9rem"
 		style:padding="0.66rem"
 		style:margin-top="4rem"
 		style:font-size="16px"
@@ -71,15 +92,7 @@
 	  <Button
 		width="11rem"
 		onclick={() => {
-		  if (inputStr === sqnc) {
-			cntChr++;
-			isError = 0;
-		  } else {
-			cntChr--;
-			isError = 1;
-		  }
-		  toVsbl();
-		  inputStr = "";
+		  checkResult();
 		}}>Check Result</Button
 	  >
 	</div>
